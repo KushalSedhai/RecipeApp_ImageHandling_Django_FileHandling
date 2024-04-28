@@ -1,0 +1,35 @@
+{% extends "frame.html" %}
+{% block start %}
+<h2>Edit Page</h2>
+<hr>
+{% comment %} enctype='multipart/form-data'is needed while sending file type {% endcomment %}
+
+<form class="col-6 mx-auto card p-3 shadow-lg" method="POST" enctype='multipart/form-data'>
+  {% csrf_token %}
+    <h2> Receipe Card</h2>
+    <hr>
+    <div class="mb-3">
+      <label for="Name" class="form-label">Name Receipe</label>
+      <input name="name" value="{{foods.name}}" type="text" class="form-control" id="Name" aria-describedby="emailHelp">
+    </div>
+    
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" class="form-control" id="description" rows="4">{{foods.description}}</textarea>
+      </div>
+
+    {% comment %} File Input {% endcomment %}
+    <div class="mb-3">
+      <img src="/media/{{foods.image}}" style="height :120px">
+      <br>
+        <label for="formFile" class="form-label">Change Image</label>
+        
+        <input name="image" class="form-control" type="file" id="formFile">
+      </div>
+    
+    <button type="submit" class="btn btn-success">Add Receipe</button>
+  </form>
+
+
+
+{% endblock %} 

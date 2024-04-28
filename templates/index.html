@@ -1,0 +1,48 @@
+{% extends "frame.html" %}
+{% block start %}
+
+<form method="POST">
+  {% csrf_token %}
+<div class="container mt-5">
+
+  <div class="col-5 mx -auto">
+    <div class="mb-3">
+      <label for="Search" class="form-label">Search</label>
+      <input name="search" type="text" class="form-control" id="Search" aria-describedby="emailHelp">
+    </div>
+    <button type="submit" class="btn btn-primary mx-auto">Search</button> 
+  </div>
+</div>
+    
+</form>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">SN.</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Picture</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for food in foods %}
+      <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{food.name}}</td>
+        <td>{{food.description}}</td>
+        <td>
+          <img src="/media/{{food.image}}" style="height :120px">
+        </td>
+        <td>
+         <a href='{% url 'edit' pk=food.id %}'> <button type="button" class="btn btn-warning">Edit</button> </a>
+         <a href= '{% url 'delete' pk=food.id %}'> <button type="button" class="btn btn-danger">Delete</button> </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endblock %}

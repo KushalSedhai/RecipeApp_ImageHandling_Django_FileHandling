@@ -1,0 +1,85 @@
+To handle pictures and files------------------------------------------------------------------------------------------------------------------
+
+Forms section:--------------------------------------------------------------------
+<form class="col-6 mx-auto card p-3 shadow-lg" method="POST" enctype='multipart/form-data'>
+
+
+
+
+Settings:---------------------------------------------------------------------------------
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+import os
+STATIC_URL = 'static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+Urls sections:-------------------------------------------------------------------
+from django.conf.urls.static import static
+from django.conf import settings
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    
+] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+
+
+Search Integrationm:--------------------------------------------------------------------------------------------------------------------------
+
+search bar creation:---------------------
+<form method="POST">
+  {% csrf_token %}
+<div class="container mt-5">
+
+  <div class="col-5 mx -auto">
+    <div class="mb-3">
+      <label for="Search" class="form-label">Search</label>
+      <input name="search" type="text" class="form-control" id="Search" aria-describedby="emailHelp">
+    </div>
+    <button type="submit" class="btn btn-primary mx-auto">Search</button> 
+  </div>
+</div>
+
+
+backend work for searching--------------------------------------------------------
+def home(request):
+    foods = Receipe.objects.all()
+    if request.method == "POST":
+        search = request.POST.get('search')
+        foods = foods.filter(name__icontains = search)
+    return render(request, 'index.html', context= {'foods':foods})
+
+#Here the contect filter and the 'foods.filter(name__icontains = search)' looks for the item name
+
+
+Image handling--------------------------------------------------------------------------------------------
+#Make sure to delete the images from directory too while deleting the instance
+
+def delete(request, pk):
+    foods = Receipe.objects.get(id=pk)
+    img =foods.image
+    os.remove(f'media/{img}')
+    foods.delete()
+    return redirect('home')
+
+#Keep the image directory clean while utilizing the edit option
+def edit(request, pk):
+    foods = Receipe.objects.get(id=pk)
+    img = foods.image
+    if request.method == "POST":
+        foods.name = request.POST.get('name')
+        foods.description = request.POST.get('description')
+        foods.image = request.FILES.get('image')
+        if foods.image == None:
+            foods.image = img
+            foods.save()
+        else:
+            os.remove(f'media/{img}')   
+            foods.save()
+        return redirect('home')
+    return render(request, 'edit.html', context={'foods':foods})
+
+---------------------------------------------------------------------------
+
