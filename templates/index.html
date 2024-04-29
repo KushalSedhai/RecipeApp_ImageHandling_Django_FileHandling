@@ -33,7 +33,7 @@
         <td>{{food.name}}</td>
         <td>{{food.description}}</td>
         <td>
-          <img src="/media/{{food.image}}" style="height :120px">
+          <img src="{{food.image.url}}" style="height :120px">
         </td>
         <td>
          <a href='{% url 'edit' pk=food.id %}'> <button type="button" class="btn btn-warning">Edit</button> </a>
